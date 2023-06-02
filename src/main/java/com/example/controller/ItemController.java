@@ -20,46 +20,40 @@ import com.example.service.ItemService;
 @Controller
 @RequestMapping("/item")
 public class ItemController {
-
-	private final ItemService itemService;
-
 	private final CategoryService categoryService;
-
-    @Autowired
-    public ItemController(ItemService itemService, CategoryService categoryService) {
+	private final ItemService itemService;
+	@Autowired
+    public ItemController(ItemService itemService,CategoryService categoryService) {
         this.itemService = itemService;
-        this.categoryService = categoryService; // 追加
+        this.categoryService = categoryService;
     }
-
-
-
-
     // 商品一覧の表示
     @GetMapping
     public String index(Model model) {
-
+    	// データの疎通確認
     	List<Item> items = this.itemService.findByDeletedAtIsNull();
-    	  // 画面で利用する変数としてitemsをセットします
+        // コンソールよりListの中身を確認する
         model.addAttribute("items", items);
-        // templates\item\index.htmlを表示します
-
         return "item/index";
     }
 
     // 商品登録ページ表示用
     @GetMapping("toroku")
-    public String torokuPage(@ModelAttribute("itemForm") ItemForm itemForm,Model model) {
+    public String torokuPage(@ModelAttribute("itemForm") ItemForm itemForm, Model model) {
         // 処理を追加
-    	List<Category> categories = this.categoryService.findAll();
-    	model.addAttribute("categories", categories);
+    	 // Categoryモデルから一覧を取得する
+        List<Category> categories = this.categoryService.findAll();
+
+        // viewにカテゴリを渡す
+        model.addAttribute("categories", categories);
         return "item/torokuPage";
     }
 
     // 商品登録の実行
     @PostMapping("toroku")
     public String toroku(ItemForm itemForm) {
-        // 処理を追加
     	this.itemService.save(itemForm);
+        // 一覧ページへリダイレクトします
         return "redirect:/item";
     }
 
@@ -77,7 +71,6 @@ public class ItemController {
         // idをセットします
         model.addAttribute("id", id);
         model.addAttribute("categories", categories);
-
         // templates/item/henshuPageを表示します
         return "item/henshuPage";
     }
@@ -93,7 +86,9 @@ public class ItemController {
     // 商品削除の実行
     @PostMapping("sakujo/{id}")
     public String sakujo(@PathVariable("id") Integer id) {
+        // 処理を追加
     	this.itemService.delete(id);
         return "redirect:/item";
     }
+
 }
