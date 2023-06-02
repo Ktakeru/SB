@@ -1,6 +1,5 @@
 package com.example.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.example.entity.Item;
 import com.example.form.ItemForm;
 import com.example.repository.ItemRepository;
+
+
 
 @Service
 public class ItemService {
@@ -29,9 +30,6 @@ public class ItemService {
         // フィールドのセットを行います
         item.setName(itemForm.getName());
         item.setPrice(itemForm.getPrice());
-        item.setCategoryId(itemForm.getCategoryId());
-        item.setStock(0);
-        // 新規登録時は在庫数に0をセットする
         // repository.saveメソッドを利用してデータの保存を行います
         return this.itemRepository.save(item);
     }
@@ -46,22 +44,10 @@ public class ItemService {
         // Formクラスのフィールドをセットします
         item.setName(itemForm.getName());
         item.setPrice(itemForm.getPrice());
-        item.setCategoryId(itemForm.getCategoryId());
         // repository.saveメソッドを利用してデータの保存を行います
         return this.itemRepository.save(item);
     }
-    public Item delete(Integer id) {
+    public void delete(Integer id) {
         this.itemRepository.deleteById(id);
-     // idから該当のEntityクラスを取得します
-        Item item = this.findById(id);
-        // EntityクラスのdeletedAtフィールドを現在日時で上書きします
-        item.setDeletedAt(LocalDateTime.now());
-
-        // 更新処理
-        return this.itemRepository.save(item);
     }
-    public List<Item> findByDeletedAtIsNull() {
-        return this.itemRepository.findByDeletedAtIsNull();
-    }
-
 }
