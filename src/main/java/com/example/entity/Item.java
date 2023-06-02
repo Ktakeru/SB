@@ -29,6 +29,9 @@ public class Item {
     @Column(name = "ID")
     private Integer id;
 
+	@Column(name = "STOCK")
+    private Integer stock;
+
 	@Column(name = "CATEGORY_ID")
 	private Integer categoryId;
 
@@ -80,7 +83,7 @@ public class Item {
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
-    private Integer stock;
+
 
     public Integer getStock() {
         return this.stock;
