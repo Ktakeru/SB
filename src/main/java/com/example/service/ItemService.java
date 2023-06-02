@@ -1,5 +1,6 @@
 package com.example.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,8 +10,6 @@ import org.springframework.stereotype.Service;
 import com.example.entity.Item;
 import com.example.form.ItemForm;
 import com.example.repository.ItemRepository;
-
-
 
 @Service
 public class ItemService {
@@ -47,7 +46,15 @@ public class ItemService {
         // repository.saveメソッドを利用してデータの保存を行います
         return this.itemRepository.save(item);
     }
-    public void delete(Integer id) {
-        this.itemRepository.deleteById(id);
+    public Item delete(Integer id) {
+    	Item item = this.findById(id);
+        // EntityクラスのdeletedAtフィールドを現在日時で上書きします
+        item.setDeletedAt(LocalDateTime.now());
+        // 更新処理
+        return this.itemRepository.save(item);
     }
+    public List<Item> findByDeletedAtIsNull() {
+        return this.itemRepository.findByDeletedAtIsNull();
+    }
+
 }

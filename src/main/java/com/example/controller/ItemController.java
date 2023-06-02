@@ -28,7 +28,7 @@ public class ItemController {
     @GetMapping
     public String index(Model model) {
     	// データの疎通確認
-        List<Item> items = this.itemService.findAll();
+    	List<Item> items = this.itemService.findByDeletedAtIsNull();
         // コンソールよりListの中身を確認する
         model.addAttribute("items", items);
         return "item/index";
@@ -53,7 +53,14 @@ public class ItemController {
     @GetMapping("henshu/{id}")
     public String henshuPage(@PathVariable("id") Integer id, Model model
                              , @ModelAttribute("itemForm") ItemForm itemForm) {
-        // 処理を追加
+    	// Entityクラスのインスタンスをidより検索し取得します
+        Item item = this.itemService.findById(id);
+        // フィールドのセットを行います
+        itemForm.setName(item.getName());
+        itemForm.setPrice(item.getPrice());
+        // idをセットします
+        model.addAttribute("id", id);
+        // templates/item/henshuPageを表示します
         return "item/henshuPage";
     }
 
@@ -61,7 +68,7 @@ public class ItemController {
     @PostMapping("henshu/{id}")
     public String henshu(@PathVariable("id") Integer id, @ModelAttribute("itemForm") ItemForm itemForm) {
         // 処理を追加
-
+    	this.itemService.update(id, itemForm);
         return "redirect:/item";
     }
 
@@ -69,6 +76,7 @@ public class ItemController {
     @PostMapping("sakujo/{id}")
     public String sakujo(@PathVariable("id") Integer id) {
         // 処理を追加
+    	this.itemService.delete(id);
         return "redirect:/item";
     }
 
