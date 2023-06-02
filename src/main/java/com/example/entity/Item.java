@@ -80,4 +80,13 @@ public class Item {
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
+    private Integer stock;
+
+    public Integer getStock() {
+        return this.stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
 }

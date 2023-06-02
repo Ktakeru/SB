@@ -29,6 +29,9 @@ public class ItemService {
         // フィールドのセットを行います
         item.setName(itemForm.getName());
         item.setPrice(itemForm.getPrice());
+        item.setCategoryId(itemForm.getCategoryId());
+        item.setStock(0);
+        // 新規登録時は在庫数に0をセットする
         // repository.saveメソッドを利用してデータの保存を行います
         return this.itemRepository.save(item);
     }

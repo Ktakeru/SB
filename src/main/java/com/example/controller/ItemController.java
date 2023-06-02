@@ -31,16 +31,7 @@ public class ItemController {
         this.categoryService = categoryService; // 追加
     }
 
-    // 商品登録ページ表示用
-    @GetMapping("toroku")
-    public String torokuPage(@ModelAttribute("itemForm") ItemForm itemForm, Model model) {
-        // Categoryモデルから一覧を取得する
-        List<Category> categories = this.categoryService.findAll();
 
-        // viewにカテゴリを渡す
-        model.addAttribute("categories", categories);
-        return "item/torokuPage";
-    }
 
 
     // 商品一覧の表示
@@ -57,8 +48,10 @@ public class ItemController {
 
     // 商品登録ページ表示用
     @GetMapping("toroku")
-    public String torokuPage(@ModelAttribute("itemForm") ItemForm itemForm) {
+    public String torokuPage(@ModelAttribute("itemForm") ItemForm itemForm,Model model) {
         // 処理を追加
+    	List<Category> categories = this.categoryService.findAll();
+    	model.addAttribute("categories", categories);
         return "item/torokuPage";
     }
 
