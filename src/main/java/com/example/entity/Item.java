@@ -18,6 +18,25 @@ public class Item {
     @Column(name = "ID")
     private Integer id;
 
+
+	@Column(name = "STOCK")
+    private Integer stock;
+
+	@Column(name = "CATEGORY_ID")
+	private Integer categoryId;
+
+	public Integer getCategoryId() {
+	        return this.categoryId;
+	}
+
+	public void setCategoryId(Integer categoryId) {
+	        this.categoryId = categoryId;
+	}
+
+	@Column(name = "DELETED_AT")
+    private LocalDateTime deletedAt;
+
+
     @Column(name = "NAME")
     private String name;
 
@@ -48,4 +67,24 @@ public class Item {
     public void setPrice(Integer price) {
         this.price = price;
     }
+
+    public LocalDateTime getDeletedAt() {
+        return this.deletedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+
+    public Integer getStock() {
+        return this.stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
 }
+
+}
+
