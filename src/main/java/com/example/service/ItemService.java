@@ -1,14 +1,11 @@
 package com.example.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.entity.Item;
-import com.example.form.ItemForm;
 import com.example.repository.ItemRepository;
 
 @Service
@@ -23,6 +20,7 @@ public class ItemService {
     public List<Item> findAll() {
         return this.itemRepository.findAll();
     }
+
     public Item save(ItemForm itemForm) {
         // Entityクラスのインスタンスを生成します
         Item item = new Item();
@@ -83,5 +81,6 @@ public class ItemService {
         // 在庫数の変動を保存
         return this.itemRepository.save(item);
     }
+
 
 }

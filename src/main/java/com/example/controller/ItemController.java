@@ -12,10 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.entity.Category;
 import com.example.entity.Item;
 import com.example.form.ItemForm;
-import com.example.service.CategoryService;
 import com.example.service.ItemService;
 
 @Controller
@@ -23,36 +21,24 @@ import com.example.service.ItemService;
 public class ItemController {
 
 	private final ItemService itemService;
-
-	private final CategoryService categoryService;
-
-    @Autowired
-    public ItemController(ItemService itemService, CategoryService categoryService) {
+	@Autowired
+    public ItemController(ItemService itemService) {
         this.itemService = itemService;
-        this.categoryService = categoryService; // 追加
     }
-
-
-
-
     // 商品一覧の表示
     @GetMapping
     public String index(Model model) {
-
-    	List<Item> items = this.itemService.findByDeletedAtIsNull();
-    	  // 画面で利用する変数としてitemsをセットします
-        model.addAttribute("items", items);
-        // templates\item\index.htmlを表示します
-
+    	// データの疎通確認
+        List<Item> items = this.itemService.findAll();
+        // コンソールよりListの中身を確認する
+        System.out.println(items.toString());
         return "item/index";
     }
 
     // 商品登録ページ表示用
     @GetMapping("toroku")
-    public String torokuPage(@ModelAttribute("itemForm") ItemForm itemForm,Model model) {
+    public String torokuPage(@ModelAttribute("itemForm") ItemForm itemForm) {
         // 処理を追加
-    	List<Category> categories = this.categoryService.findAll();
-    	model.addAttribute("categories", categories);
         return "item/torokuPage";
     }
 
@@ -60,7 +46,6 @@ public class ItemController {
     @PostMapping("toroku")
     public String toroku(ItemForm itemForm) {
         // 処理を追加
-    	this.itemService.save(itemForm);
         return "redirect:/item";
     }
 
@@ -68,18 +53,7 @@ public class ItemController {
     @GetMapping("henshu/{id}")
     public String henshuPage(@PathVariable("id") Integer id, Model model
                              , @ModelAttribute("itemForm") ItemForm itemForm) {
-    	// Entityクラスのインスタンスをidより検索し取得します
-        Item item = this.itemService.findById(id);
-        // フィールドのセットを行います
-        itemForm.setName(item.getName());
-        itemForm.setPrice(item.getPrice());
-        itemForm.setCategoryId(item.getCategoryId());
-        List<Category> categories = this.categoryService.findAll();
-        // idをセットします
-        model.addAttribute("id", id);
-        model.addAttribute("categories", categories);
-
-        // templates/item/henshuPageを表示します
+        // 処理を追加
         return "item/henshuPage";
     }
 
@@ -87,16 +61,17 @@ public class ItemController {
     @PostMapping("henshu/{id}")
     public String henshu(@PathVariable("id") Integer id, @ModelAttribute("itemForm") ItemForm itemForm) {
         // 処理を追加
-    	this.itemService.update(id, itemForm);
+
         return "redirect:/item";
     }
 
     // 商品削除の実行
     @PostMapping("sakujo/{id}")
     public String sakujo(@PathVariable("id") Integer id) {
-    	this.itemService.delete(id);
+        // 処理を追加
         return "redirect:/item";
     }
+
  // 送信ボタンのname属性が in の場合は入荷処理の実行
     @PostMapping(path = "stock/{id}", params = "in")
     public String nyuka(@PathVariable("id") Integer id, @RequestParam("stock") Integer inputValue) {
@@ -111,4 +86,5 @@ public class ItemController {
     	this.itemService.shukka(id, inputValue);
     	return "redirect:/item";
     }
+
 }
