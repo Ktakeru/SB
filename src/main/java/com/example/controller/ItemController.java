@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.example.entity.Category;
 import com.example.entity.Item;
 import com.example.form.ItemForm;
+import com.example.service.CategoryService;
 import com.example.service.ItemService;
 
 @Controller
@@ -21,12 +23,22 @@ public class ItemController {
 
 	private final ItemService itemService;
 
+	private final CategoryService categoryService;
+
+    @Autowired
+    public ItemController(ItemService itemService, CategoryService categoryService) {
+        this.itemService = itemService;
+        this.categoryService = categoryService; // 追加
+    }
+
+
 
 
     // 商品一覧の表示
     @GetMapping
     public String index(Model model) {
-    	List<Item> items = this.itemService.findAll();
+
+    	List<Item> items = this.itemService.findByDeletedAtIsNull();
     	  // 画面で利用する変数としてitemsをセットします
         model.addAttribute("items", items);
         // templates\item\index.htmlを表示します
@@ -36,8 +48,10 @@ public class ItemController {
 
     // 商品登録ページ表示用
     @GetMapping("toroku")
-    public String torokuPage(@ModelAttribute("itemForm") ItemForm itemForm) {
+    public String torokuPage(@ModelAttribute("itemForm") ItemForm itemForm,Model model) {
         // 処理を追加
+    	List<Category> categories = this.categoryService.findAll();
+    	model.addAttribute("categories", categories);
         return "item/torokuPage";
     }
 
@@ -58,8 +72,12 @@ public class ItemController {
         // フィールドのセットを行います
         itemForm.setName(item.getName());
         itemForm.setPrice(item.getPrice());
+        itemForm.setCategoryId(item.getCategoryId());
+        List<Category> categories = this.categoryService.findAll();
         // idをセットします
         model.addAttribute("id", id);
+        model.addAttribute("categories", categories);
+
         // templates/item/henshuPageを表示します
         return "item/henshuPage";
     }
@@ -78,10 +96,4 @@ public class ItemController {
     	this.itemService.delete(id);
         return "redirect:/item";
     }
-
-    @Autowired
-    public ItemController(ItemService itemService) {
-        this.itemService = itemService;
-    }
-
 }
