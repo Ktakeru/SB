@@ -43,6 +43,7 @@ public class ItemController {
     }
 
     // 商品登録の実行
+    // 2
     @PostMapping("toroku")
     public String toroku(ItemForm itemForm) {
         // 処理を追加
